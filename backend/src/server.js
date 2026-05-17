@@ -1,8 +1,21 @@
 import express from "express";
+import path from "path";
+import cors from "cors";
+
 import { ENV } from "./lib/env.js";
 import { connnectDb } from "./lib/db.js";
 
+import { serve } from "inngest/express";
+import { inngest } from "./lib/inngest.js";
+
 const app = express();
+
+//middleware
+app.use(express.json());
+//credentails:true meaning?? server allows cookies on request
+app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
+
+app.use("/api/inngest", serve);
 
 app.get("/", (req, res) => {
   res.status(200).json({ msg: "Bitch Please" });
