@@ -5,7 +5,7 @@ import { use } from "react";
 const apiKey = ENV.STREAM_API_KEY;
 const apiSecret = ENV.STREAM_API_SECRET;
 
-if (!apiKey || !apiSecretKey) {
+if (!apiKey || !apiSecret) {
   console.error("STREAM_API KEY or STREAM_API_SECRET is missing");
 }
 
