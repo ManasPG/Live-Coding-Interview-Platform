@@ -8,7 +8,9 @@ import { connnectDb } from "./lib/db.js";
 
 import { serve } from "inngest/express";
 import { inngest, functions } from "./lib/inngest.js";
+
 import chatRoutes from "./routes/chatRoutes.js";
+import sessionRoutes from "./routes/sessionRoute.js";
 
 const app = express();
 
@@ -20,6 +22,7 @@ app.use(clerkMiddleware()); // auth field to request objects
 
 app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use("/api/chat", chatRoutes);
+app.use("/api/session", sessionRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({ msg: "Bitch Please" });
