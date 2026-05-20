@@ -14,6 +14,7 @@ export async function getStreamToken(req, res) {
       chatToken,
       userId: req.user.clerkId,
       userName: req.user.name,
+      profileImage: req.user.profileImage,
       userImage: req.user.profileImage,
     });
   } catch (error) {

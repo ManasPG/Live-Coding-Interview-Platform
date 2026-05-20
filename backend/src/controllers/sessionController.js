@@ -24,22 +24,40 @@ export async function createSession(req, res) {
       callId,
     });
 
-    // create stream video call
-    await streamClient.video.call("default", callId).getOrCreate({
-      data: {
-        created_by_id: clerkId,
-        custom: { problem, difficulty, sessionId: session._id.toString() },
-      },
+    const streamSetupResults = await Promise.allSettled([
+      streamClient.video.call("default", callId).getOrCreate({
+        data: {
+          created_by_id: clerkId,
+          custom: { problem, difficulty, sessionId: session._id.toString() },
+        },
+      }),
+      chatClient
+        .channel("messaging", callId, {
+          name: `${problem} Session`,
+          created_by_id: clerkId,
+          members: [clerkId],
+        })
+        .create(),
+    ]);
+
+    streamSetupResults.forEach((result, index) => {
+      if (result.status === "rejected") {
+        const target = index === 0 ? "video-call" : "chat-channel";
+        console.warn("Stream setup failed during session creation", {
+          target,
+          callId,
+          sessionId: session._id.toString(),
+          clerkId,
+          error: result.reason?.message || result.reason,
+        });
+      }
     });
 
-    // chat messaging
-    const channel = chatClient.channel("messaging", callId, {
-      name: `${problem} Session`,
-      created_by_id: clerkId,
-      members: [clerkId],
+    console.info("Session created", {
+      sessionId: session._id.toString(),
+      callId,
+      host: clerkId,
     });
-
-    await channel.create();
 
     res.status(201).json({ session });
   } catch (error) {
@@ -128,8 +146,17 @@ export async function joinSession(req, res) {
     session.participant = userId;
     await session.save();
 
-    const channel = chatClient.channel("messaging", session.callId);
-    await channel.addMembers([clerkId]);
+    try {
+      const channel = chatClient.channel("messaging", session.callId);
+      await channel.addMembers([clerkId]);
+    } catch (error) {
+      console.warn("Failed adding user to Stream channel", {
+        sessionId: session._id.toString(),
+        callId: session.callId,
+        clerkId,
+        error: error?.message || error,
+      });
+    }
 
     res.status(200).json({ session });
   } catch (error) {
@@ -199,13 +226,22 @@ export async function endSession(req, res) {
       return res.status(400).json({ message: "Session is already completed" });
     }
 
-    // delete stream video call
-    const call = streamClient.video.call("default", session.callId);
-    await call.delete({ hard: true });
+    const teardownResults = await Promise.allSettled([
+      streamClient.video.call("default", session.callId).delete({ hard: true }),
+      chatClient.channel("messaging", session.callId).delete(),
+    ]);
 
-    // delete stream chat channel
-    const channel = chatClient.channel("messaging", session.callId);
-    await channel.delete();
+    teardownResults.forEach((result, index) => {
+      if (result.status === "rejected") {
+        const target = index === 0 ? "video-call" : "chat-channel";
+        console.warn("Stream teardown failed while ending session", {
+          target,
+          sessionId: session._id.toString(),
+          callId: session.callId,
+          error: result.reason?.message || result.reason,
+        });
+      }
+    });
 
     session.status = "completed";
     await session.save();
