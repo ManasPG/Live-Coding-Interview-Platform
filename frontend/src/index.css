@@ -1,68 +1,89 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap");
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: all;
+}
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --app-grid-line: color-mix(
+    in oklab,
+    var(--color-base-content) 10%,
+    transparent
+  );
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+html,
+body,
+#root {
+  min-height: 100%;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      color-mix(in oklab, var(--color-primary) 24%, transparent),
+      transparent 38%
+    ),
+    radial-gradient(
+      circle at 80% -10%,
+      color-mix(in oklab, var(--color-secondary) 20%, transparent),
+      transparent 32%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-base-200) 65%, var(--color-base-300)) 0%,
+      var(--color-base-300) 100%
+    );
+  background-attachment: fixed;
+  color: var(--color-base-content);
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+code,
+pre,
+.font-mono {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.app-shell {
+  position: relative;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+.app-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--app-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--app-grid-line) 1px, transparent 1px);
+  background-size: 36px 36px;
+  opacity: 0.22;
+  z-index: -1;
+}
+
+/* When a page requests a pure black backdrop (dashboard), prefer a solid black background and reduce overlay noise */
+.app-shell.bg-black {
+  background: #000 !important;
+}
+
+.app-shell.bg-black::before {
+  opacity: 0.06;
+}
+
+.surface-card {
+  border: 1px solid color-mix(in oklab, var(--color-primary) 16%, transparent);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 18px 40px -24px color-mix(in oklab, var(--color-primary) 55%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--color-base-content) 7%, transparent);
+}
+
+/* Add cursor pointer to buttons by default - this is coming from tailwind docs */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
   }
 }
