@@ -1,6 +1,7 @@
 import { useUser } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import toast from "react-hot-toast";
 import {
   useEndSession,
   useJoinSession,
@@ -95,16 +96,49 @@ function SessionPage() {
   };
 
   const handleEndSession = () => {
-    if (
-      confirm(
-        "Are you sure you want to end this session? All participants will be notified.",
-      )
-    ) {
-      // this will navigate the HOST to dashboard
-      endSessionMutation.mutate(id, {
-        onSuccess: () => navigate("/dashboard"),
-      });
-    }
+    toast.custom(
+      (t) => (
+        <div
+          className={`w-[360px] rounded-2xl border border-base-300 bg-base-100 p-4 shadow-2xl transition-all ${
+            t.visible ? "animate-in fade-in zoom-in-95" : "animate-out fade-out"
+          }`}
+        >
+          <div className="mb-3">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-error/80">
+              End Session
+            </p>
+            <h4 className="mt-1 text-base font-semibold text-base-content">
+              Close this interview session?
+            </h4>
+            <p className="mt-2 text-sm text-base-content/70">
+              All participants will be notified and the session will be marked
+              completed.
+            </p>
+          </div>
+
+          <div className="flex items-center justify-end gap-2">
+            <button
+              className="btn btn-ghost btn-sm"
+              onClick={() => toast.dismiss(t.id)}
+            >
+              Cancel
+            </button>
+            <button
+              className="btn btn-error btn-sm"
+              onClick={() => {
+                toast.dismiss(t.id);
+                endSessionMutation.mutate(id, {
+                  onSuccess: () => navigate("/dashboard"),
+                });
+              }}
+            >
+              End session
+            </button>
+          </div>
+        </div>
+      ),
+      { duration: 10000 },
+    );
   };
 
   return (

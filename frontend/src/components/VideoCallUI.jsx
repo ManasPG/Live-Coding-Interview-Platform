@@ -16,6 +16,7 @@ import {
   Window,
 } from "stream-chat-react";
 import axiosInstance from "../lib/axios";
+import { sessionApi } from "../api/sessions";
 
 import "@stream-io/video-react-sdk/dist/css/styles.css";
 import "stream-chat-react/dist/css/v2/index.css";
@@ -71,7 +72,7 @@ function VideoCallUI({ chatClient, channel, isHost, sessionId }) {
             onLeave={async () => {
               try {
                 if (isHost && sessionId) {
-                  await axiosInstance.post(`/session/${sessionId}/end`);
+                  await sessionApi.endSession(sessionId);
                 } else {
                   if (channel && chatClient) {
                     const userId =
@@ -98,7 +99,9 @@ function VideoCallUI({ chatClient, channel, isHost, sessionId }) {
                     // notify backend to clear participant from session
                     if (sessionId) {
                       try {
-                        await axiosInstance.post(`/session/${sessionId}/leave`);
+                        await axiosInstance.post(
+                          `/sessions/${sessionId}/leave`,
+                        );
                       } catch (err) {
                         console.warn(
                           "Failed to notify server of leave:",
