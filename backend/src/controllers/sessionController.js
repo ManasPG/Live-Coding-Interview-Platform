@@ -73,7 +73,7 @@ export async function getMyRecentSessions(req, res) {
       $or: [{ host: userId }, { participant: userId }],
     })
       .sort({ createdAt: -1 })
-      .limit(20);
+      .limit(6);
 
     res.status(200).json({ sessions });
   } catch (error) {
@@ -134,6 +134,46 @@ export async function joinSession(req, res) {
     res.status(200).json({ session });
   } catch (error) {
     console.log("Error in joinSession controller:", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+export async function leaveSession(req, res) {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    const clerkId = req.user.clerkId;
+
+    const session = await Session.findById(id);
+    if (!session) return res.status(404).json({ message: "Session not found" });
+
+    // only the current participant can leave using this route
+    if (
+      !session.participant ||
+      session.participant.toString() !== userId.toString()
+    ) {
+      return res
+        .status(400)
+        .json({ message: "You are not the participant of this session" });
+    }
+
+    // remove from stream chat channel
+    try {
+      const channel = chatClient.channel("messaging", session.callId);
+      await channel.removeMembers([clerkId]);
+    } catch (err) {
+      console.warn(
+        "Failed to remove member from stream channel:",
+        err.message || err,
+      );
+    }
+
+    session.participant = null;
+    await session.save();
+
+    res.status(200).json({ session });
+  } catch (error) {
+    console.log("Error in leaveSession controller:", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
 }
