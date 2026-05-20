@@ -20,7 +20,12 @@ app.use(express.json());
 // credentials:true meaning?? => server allows a browser to include cookies on request
 app.use(
   cors({
-    origin: ["https://localhost:5173", ENV.CLIENT_URL],
+    origin: [
+      "http://localhost:5173",
+      "http://127.0.0.1:5173",
+      ENV.CLIENT_URL,
+      /^https:\/\/.*\.vercel\.app$/,
+    ].filter(Boolean),
     credentials: true,
   }),
 );
