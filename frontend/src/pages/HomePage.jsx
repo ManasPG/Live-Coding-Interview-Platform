@@ -12,9 +12,9 @@ import { SignInButton } from "@clerk/clerk-react";
 
 function HomePage() {
   return (
-    <div className="bg-gradient-to-br from-base-100 via-base-200 to-base-300">
+    <div className="app-shell min-h-screen">
       {/* NAVBAR */}
-      <nav className="bg-base-100/80 backdrop-blur-md border-b border-primary/20 sticky top-0 z-50 shadow-lg">
+      <nav className="sticky top-0 z-50 border-b border-primary/20 bg-base-100/75 backdrop-blur-xl shadow-lg shadow-primary/10">
         <div className="max-w-7xl mx-auto p-4 flex items-center justify-between">
           {/* LOGO */}
           <Link
@@ -29,7 +29,9 @@ function HomePage() {
               <span className="font-black text-xl bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent font-mono tracking-wider">
                 Talent IQ
               </span>
-              <span className="text-xs text-base-content/60 font-medium -mt-1">Code Together</span>
+              <span className="text-xs text-base-content/60 font-medium -mt-1">
+                Code Together
+              </span>
             </div>
           </Link>
 
@@ -48,7 +50,7 @@ function HomePage() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* LEFT CONTENT */}
           <div className="space-y-8">
-            <div className="badge badge-primary badge-lg">
+            <div className="badge badge-primary badge-lg border-none shadow-md shadow-primary/25">
               <ZapIcon className="size-4" />
               Real-time Collaboration
             </div>
@@ -62,8 +64,9 @@ function HomePage() {
             </h1>
 
             <p className="text-xl text-base-content/70 leading-relaxed max-w-xl">
-              The ultimate platform for collaborative coding interviews and pair programming.
-              Connect face-to-face, code in real-time, and ace your technical interviews.
+              The ultimate platform for collaborative coding interviews and pair
+              programming. Connect face-to-face, code in real-time, and ace your
+              technical interviews.
             </p>
 
             {/* FEATURE PILLS */}
@@ -98,7 +101,7 @@ function HomePage() {
             </div>
 
             {/* STATS */}
-            <div className="stats stats-vertical lg:stats-horizontal bg-base-100 shadow-lg">
+            <div className="stats stats-vertical lg:stats-horizontal bg-base-100/90 surface-card rounded-2xl">
               <div className="stat">
                 <div className="stat-value text-primary">10K+</div>
                 <div className="stat-title">Active Users</div>
@@ -115,11 +118,13 @@ function HomePage() {
           </div>
 
           {/* RIGHT IMAGE */}
-          <img
-            src="/hero.png"
-            alt="CodeCollab Platform"
-            className="w-full h-auto rounded-3xl shadow-2xl border-4 border-base-100 hover:scale-105 transition-transform duration-500"
-          />
+          <div className="surface-card rounded-3xl p-2 bg-base-100/70">
+            <img
+              src="/hero.png"
+              alt="CodeCollab Platform"
+              className="w-full h-auto rounded-3xl border border-base-content/10 hover:scale-[1.01] transition-transform duration-500"
+            />
+          </div>
         </div>
       </div>
 
@@ -127,50 +132,55 @@ function HomePage() {
       <div className="max-w-7xl mx-auto px-4 py-20">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-4">
-            Everything You Need to <span className="text-primary font-mono">Succeed</span>
+            Everything You Need to{" "}
+            <span className="text-primary font-mono">Succeed</span>
           </h2>
           <p className="text-lg text-base-content/70 max-w-2xl mx-auto">
-            Powerful features designed to make your coding interviews seamless and productive
+            Powerful features designed to make your coding interviews seamless
+            and productive
           </p>
         </div>
 
         {/* FEATURES GRID */}
         <div className="grid md:grid-cols-3 gap-8">
           {/* Feature 1 */}
-          <div className="card bg-base-100 shadow-xl">
+          <div className="card bg-base-100/90 surface-card">
             <div className="card-body items-center text-center">
               <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4">
                 <VideoIcon className="size-8 text-primary" />
               </div>
               <h3 className="card-title">HD Video Call</h3>
               <p className="text-base-content/70">
-                Crystal clear video and audio for seamless communication during interviews
+                Crystal clear video and audio for seamless communication during
+                interviews
               </p>
             </div>
           </div>
 
           {/* Feature 2 */}
-          <div className="card bg-base-100 shadow-xl">
+          <div className="card bg-base-100/90 surface-card">
             <div className="card-body items-center text-center">
               <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4">
                 <Code2Icon className="size-8 text-primary" />
               </div>
               <h3 className="card-title">Live Code Editor</h3>
               <p className="text-base-content/70">
-                Collaborate in real-time with syntax highlighting and multiple language support
+                Collaborate in real-time with syntax highlighting and multiple
+                language support
               </p>
             </div>
           </div>
 
           {/* Feature 3 */}
-          <div className="card bg-base-100 shadow-xl">
+          <div className="card bg-base-100/90 surface-card">
             <div className="card-body items-center text-center">
               <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4">
                 <UsersIcon className="size-8 text-primary" />
               </div>
               <h3 className="card-title">Easy Collaboration</h3>
               <p className="text-base-content/70">
-                Share your screen, discuss solutions, and learn from each other in real-time
+                Share your screen, discuss solutions, and learn from each other
+                in real-time
               </p>
             </div>
           </div>

@@ -1,2 +1,89 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap");
 @import "tailwindcss";
-@plugin "daisyui";
+@plugin "daisyui" {
+  themes: all;
+}
+
+:root {
+  --app-grid-line: color-mix(
+    in oklab,
+    var(--color-base-content) 10%,
+    transparent
+  );
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      color-mix(in oklab, var(--color-primary) 24%, transparent),
+      transparent 38%
+    ),
+    radial-gradient(
+      circle at 80% -10%,
+      color-mix(in oklab, var(--color-secondary) 20%, transparent),
+      transparent 32%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-base-200) 65%, var(--color-base-300)) 0%,
+      var(--color-base-300) 100%
+    );
+  background-attachment: fixed;
+  color: var(--color-base-content);
+}
+
+code,
+pre,
+.font-mono {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.app-shell {
+  position: relative;
+}
+
+.app-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--app-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--app-grid-line) 1px, transparent 1px);
+  background-size: 36px 36px;
+  opacity: 0.22;
+  z-index: -1;
+}
+
+/* When a page requests a pure black backdrop (dashboard), prefer a solid black background and reduce overlay noise */
+.app-shell.bg-black {
+  background: #000 !important;
+}
+
+.app-shell.bg-black::before {
+  opacity: 0.06;
+}
+
+.surface-card {
+  border: 1px solid color-mix(in oklab, var(--color-primary) 16%, transparent);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 18px 40px -24px color-mix(in oklab, var(--color-primary) 55%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--color-base-content) 7%, transparent);
+}
+
+/* Add cursor pointer to buttons by default - this is coming from tailwind docs */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}

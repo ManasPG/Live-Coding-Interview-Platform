@@ -1,4 +1,4 @@
-import { requireAuth } from "@clerk/express";
+import { clerkClient, requireAuth } from "@clerk/express";
 import User from "../models/User.js";
 
 export const protectRoute = [
@@ -10,7 +10,24 @@ export const protectRoute = [
       if (!clerkId)
         return res.status(401).json({ msg: "Unauthorized - invalid token" });
 
-      const user = await User.findOne({ clerkId });
+      let user = await User.findOne({ clerkId });
+
+      if (!user) {
+        const clerkUser = await clerkClient.users.getUser(clerkId);
+        const email = clerkUser.emailAddresses[0]?.emailAddress || "";
+        const name =
+          `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim() ||
+          clerkUser.username ||
+          email ||
+          "Anonymous";
+
+        user = await User.create({
+          clerkId,
+          email,
+          name,
+          profileImage: clerkUser.imageUrl || "",
+        });
+      }
 
       if (!user) return res.status(404).json({ msg: "User not found" });
 
