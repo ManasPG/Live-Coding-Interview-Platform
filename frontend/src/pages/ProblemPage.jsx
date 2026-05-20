@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { PROBLEMS } from "../data/problems";
 import Navbar from "../components/Navbar";
+import { DEFAULT_CPP_STARTER } from "../data/problems";
 
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import ProblemDescription from "../components/ProblemDescription";
@@ -30,7 +31,10 @@ function ProblemPage() {
   useEffect(() => {
     if (id && PROBLEMS[id]) {
       setCurrentProblemId(id);
-      setCode(PROBLEMS[id].starterCode[selectedLanguage]);
+      setCode(
+        PROBLEMS[id].starterCode[selectedLanguage] ||
+          (selectedLanguage === "cpp" ? DEFAULT_CPP_STARTER : ""),
+      );
       setOutput(null);
     }
   }, [id, selectedLanguage]);
@@ -38,7 +42,10 @@ function ProblemPage() {
   const handleLanguageChange = (e) => {
     const newLang = e.target.value;
     setSelectedLanguage(newLang);
-    setCode(currentProblem.starterCode[newLang]);
+    setCode(
+      currentProblem.starterCode[newLang] ||
+        (newLang === "cpp" ? DEFAULT_CPP_STARTER : ""),
+    );
     setOutput(null);
   };
 
@@ -95,14 +102,19 @@ function ProblemPage() {
     // check if code executed successfully and matches expected output
 
     if (result.success) {
-      const expectedOutput = currentProblem.expectedOutput[selectedLanguage];
-      const testsPassed = checkIfTestsPassed(result.output, expectedOutput);
+      const expectedOutput = currentProblem.expectedOutput?.[selectedLanguage];
 
-      if (testsPassed) {
-        triggerConfetti();
-        toast.success("All tests passed! Great job!");
+      if (expectedOutput) {
+        const testsPassed = checkIfTestsPassed(result.output, expectedOutput);
+
+        if (testsPassed) {
+          triggerConfetti();
+          toast.success("All tests passed! Great job!");
+        } else {
+          toast.error("Tests failed. Check your output!");
+        }
       } else {
-        toast.error("Tests failed. Check your output!");
+        toast.success("Code executed successfully!");
       }
     } else {
       toast.error("Code execution failed!");

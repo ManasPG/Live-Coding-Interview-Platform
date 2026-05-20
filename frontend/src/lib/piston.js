@@ -1,11 +1,28 @@
-// Piston API is a service for code execution
+const JUDGE0_API = "https://ce.judge0.com";
 
-const PISTON_API = "https://emkc.org/api/v2/piston";
+const LANGUAGE_IDS = {
+  javascript: 63,
+  python: 71,
+  java: 62,
+  cpp: 54,
+};
 
-const LANGUAGE_VERSIONS = {
-  javascript: { language: "javascript", version: "18.15.0" },
-  python: { language: "python", version: "3.10.0" },
-  java: { language: "java", version: "15.0.2" },
+const encodeBase64 = (value) => {
+  if (typeof Buffer !== "undefined") {
+    return Buffer.from(value, "utf8").toString("base64");
+  }
+
+  return btoa(unescape(encodeURIComponent(value)));
+};
+
+const decodeBase64 = (value) => {
+  if (!value) return "";
+
+  if (typeof Buffer !== "undefined") {
+    return Buffer.from(value, "base64").toString("utf8");
+  }
+
+  return decodeURIComponent(escape(atob(value)));
 };
 
 /**
@@ -15,31 +32,28 @@ const LANGUAGE_VERSIONS = {
  */
 export async function executeCode(language, code) {
   try {
-    const languageConfig = LANGUAGE_VERSIONS[language];
+    const languageId = LANGUAGE_IDS[language];
 
-    if (!languageConfig) {
+    if (!languageId) {
       return {
         success: false,
         error: `Unsupported language: ${language}`,
       };
     }
 
-    const response = await fetch(`${PISTON_API}/execute`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${JUDGE0_API}/submissions?base64_encoded=true&wait=true&fields=*`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          language_id: languageId,
+          source_code: encodeBase64(code),
+        }),
       },
-      body: JSON.stringify({
-        language: languageConfig.language,
-        version: languageConfig.version,
-        files: [
-          {
-            name: `main.${getFileExtension(language)}`,
-            content: code,
-          },
-        ],
-      }),
-    });
+    );
 
     if (!response.ok) {
       return {
@@ -49,15 +63,16 @@ export async function executeCode(language, code) {
     }
 
     const data = await response.json();
+    const output = decodeBase64(data.stdout);
+    const stderr = decodeBase64(data.stderr);
+    const compileOutput = decodeBase64(data.compile_output);
+    const message = decodeBase64(data.message);
 
-    const output = data.run.output || "";
-    const stderr = data.run.stderr || "";
-
-    if (stderr) {
+    if (compileOutput || stderr || message) {
       return {
         success: false,
-        output: output,
-        error: stderr,
+        output,
+        error: compileOutput || stderr || message || "Execution failed",
       };
     }
 
@@ -71,14 +86,4 @@ export async function executeCode(language, code) {
       error: `Failed to execute code: ${error.message}`,
     };
   }
-}
-
-function getFileExtension(language) {
-  const extensions = {
-    javascript: "js",
-    python: "py",
-    java: "java",
-  };
-
-  return extensions[language] || "txt";
 }

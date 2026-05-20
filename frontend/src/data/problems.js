@@ -52,7 +52,7 @@ print(twoSum([3, 2, 4], 6))  # Expected: [1, 2]
 print(twoSum([3, 3], 6))  # Expected: [0, 1]`,
       java: `import java.util.*;
 
-class Solution {
+public class Main {
     public static int[] twoSum(int[] nums, int target) {
         // Write your solution here
         
@@ -65,11 +65,43 @@ class Solution {
         System.out.println(Arrays.toString(twoSum(new int[]{3, 3}, 6))); // Expected: [0, 1]
     }
 }`,
+      cpp: `#include <bits/stdc++.h>
+using namespace std;
+
+vector<int> twoSum(const vector<int>& nums, int target) {
+  // Write your solution here
+  return {};
+}
+
+void printResult(const vector<int>& result) {
+  cout << "[";
+  for (size_t i = 0; i < result.size(); ++i) {
+    cout << result[i];
+    if (i + 1 < result.size()) cout << ", ";
+  }
+  cout << "]";
+}
+
+int main() {
+  vector<int> nums = {2, 7, 11, 15};
+  printResult(twoSum(nums, 9));
+  cout << endl;
+
+  vector<int> nums2 = {3, 2, 4};
+  printResult(twoSum(nums2, 6));
+  cout << endl;
+
+  vector<int> nums3 = {3, 3};
+  printResult(twoSum(nums3, 6));
+  cout << endl;
+  return 0;
+}`,
     },
     expectedOutput: {
       javascript: "[0,1]\n[1,2]\n[0,1]",
       python: "[0, 1]\n[1, 2]\n[0, 1]",
       java: "[0, 1]\n[1, 2]\n[0, 1]",
+      cpp: "[0, 1]\n[1, 2]\n[0, 1]",
     },
   },
 
@@ -80,7 +112,9 @@ class Solution {
     category: "String • Two Pointers",
     description: {
       text: "Write a function that reverses a string. The input string is given as an array of characters s.",
-      notes: ["You must do this by modifying the input array in-place with O(1) extra memory."],
+      notes: [
+        "You must do this by modifying the input array in-place with O(1) extra memory.",
+      ],
     },
     examples: [
       {
@@ -121,13 +155,13 @@ reverseString(test2)
 print(test2)  # Expected: ["h","a","n","n","a","H"]`,
       java: `import java.util.*;
 
-class Solution {
-    public static void reverseString(char[] s) {
+    public class Main {
+      public static void reverseString(char[] s) {
         // Write your solution here
         
-    }
+      }
     
-    public static void main(String[] args) {
+      public static void main(String[] args) {
         char[] test1 = {'h','e','l','l','o'};
         reverseString(test1);
         System.out.println(Arrays.toString(test1)); // Expected: [o, l, l, e, h]
@@ -135,13 +169,42 @@ class Solution {
         char[] test2 = {'H','a','n','n','a','h'};
         reverseString(test2);
         System.out.println(Arrays.toString(test2)); // Expected: [h, a, n, n, a, H]
+      }
+    }`,
+      cpp: `#include <bits/stdc++.h>
+    using namespace std;
+
+    void reverseString(vector<char>& s) {
+      // Write your solution here
     }
-}`,
+
+void printChars(const vector<char>& s) {
+  cout << "[";
+  for (size_t i = 0; i < s.size(); ++i) {
+    cout << '"' << s[i] << '"';
+    if (i + 1 < s.size()) cout << ",";
+  }
+  cout << "]";
+}
+
+    int main() {
+      vector<char> test1 = {'h','e','l','l','o'};
+      reverseString(test1);
+  printChars(test1);
+      cout << endl;
+
+  vector<char> test2 = {'H','a','n','n','a','h'};
+  reverseString(test2);
+  printChars(test2);
+  cout << endl;
+      return 0;
+    }`,
     },
     expectedOutput: {
       javascript: '["o","l","l","e","h"]\n["h","a","n","n","a","H"]',
       python: "['o', 'l', 'l', 'e', 'h']\n['h', 'a', 'n', 'n', 'a', 'H']",
       java: "[o, l, l, e, h]\n[h, a, n, n, a, H]",
+      cpp: '["o","l","l","e","h"]\n["h","a","n","n","a","H"]',
     },
   },
 
@@ -152,7 +215,9 @@ class Solution {
     category: "String • Two Pointers",
     description: {
       text: "A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.",
-      notes: ["Given a string s, return true if it is a palindrome, or false otherwise."],
+      notes: [
+        "Given a string s, return true if it is a palindrome, or false otherwise.",
+      ],
     },
     examples: [
       {
@@ -172,7 +237,10 @@ class Solution {
           's is an empty string "" after removing non-alphanumeric characters. Since an empty string reads the same forward and backward, it is a palindrome.',
       },
     ],
-    constraints: ["1 ≤ s.length ≤ 2 * 10⁵", "s consists only of printable ASCII characters"],
+    constraints: [
+      "1 ≤ s.length ≤ 2 * 10⁵",
+      "s consists only of printable ASCII characters",
+    ],
     starterCode: {
       javascript: `function isPalindrome(s) {
   // Write your solution here
@@ -191,7 +259,7 @@ console.log(isPalindrome(" ")); // Expected: true`,
 print(isPalindrome("A man, a plan, a canal: Panama"))  # Expected: True
 print(isPalindrome("race a car"))  # Expected: False
 print(isPalindrome(" "))  # Expected: True`,
-      java: `class Solution {
+      java: `public class Main {
     public static boolean isPalindrome(String s) {
         // Write your solution here
         
@@ -204,11 +272,27 @@ print(isPalindrome(" "))  # Expected: True`,
         System.out.println(isPalindrome(" ")); // Expected: true
     }
 }`,
+      cpp: `#include <bits/stdc++.h>
+using namespace std;
+
+bool isPalindrome(const string& s) {
+  // Write your solution here
+  return false;
+}
+
+int main() {
+  cout << boolalpha;
+  cout << isPalindrome("A man, a plan, a canal: Panama") << endl;
+  cout << isPalindrome("race a car") << endl;
+  cout << isPalindrome(" ") << endl;
+  return 0;
+}`,
     },
     expectedOutput: {
       javascript: "true\nfalse\ntrue",
       python: "True\nFalse\nTrue",
       java: "true\nfalse\ntrue",
+      cpp: "true\nfalse\ntrue",
     },
   },
 
@@ -257,7 +341,7 @@ console.log(maxSubArray([5,4,-1,7,8])); // Expected: 23`,
 print(maxSubArray([-2,1,-3,4,-1,2,1,-5,4]))  # Expected: 6
 print(maxSubArray([1]))  # Expected: 1
 print(maxSubArray([5,4,-1,7,8]))  # Expected: 23`,
-      java: `class Solution {
+      java: `public class Main {
     public static int maxSubArray(int[] nums) {
         // Write your solution here
         
@@ -270,11 +354,26 @@ print(maxSubArray([5,4,-1,7,8]))  # Expected: 23`,
         System.out.println(maxSubArray(new int[]{5,4,-1,7,8})); // Expected: 23
     }
 }`,
+      cpp: `#include <bits/stdc++.h>
+using namespace std;
+
+int maxSubArray(const vector<int>& nums) {
+  // Write your solution here
+  return 0;
+}
+
+int main() {
+  cout << maxSubArray(vector<int>{-2,1,-3,4,-1,2,1,-5,4}) << endl;
+  cout << maxSubArray(vector<int>{1}) << endl;
+  cout << maxSubArray(vector<int>{5,4,-1,7,8}) << endl;
+  return 0;
+}`,
     },
     expectedOutput: {
       javascript: "6\n1\n23",
       python: "6\n1\n23",
       java: "6\n1\n23",
+      cpp: "6\n1\n23",
     },
   },
 
@@ -320,7 +419,7 @@ console.log(maxArea([1,1])); // Expected: 1`,
 # Test cases
 print(maxArea([1,8,6,2,5,4,8,3,7]))  # Expected: 49
 print(maxArea([1,1]))  # Expected: 1`,
-      java: `class Solution {
+      java: `public class Main {
     public static int maxArea(int[] height) {
         // Write your solution here
         
@@ -332,11 +431,25 @@ print(maxArea([1,1]))  # Expected: 1`,
         System.out.println(maxArea(new int[]{1,1})); // Expected: 1
     }
 }`,
+      cpp: `#include <bits/stdc++.h>
+using namespace std;
+
+int maxArea(const vector<int>& height) {
+  // Write your solution here
+  return 0;
+}
+
+int main() {
+  cout << maxArea(vector<int>{1,8,6,2,5,4,8,3,7}) << endl;
+  cout << maxArea(vector<int>{1,1}) << endl;
+  return 0;
+}`,
     },
     expectedOutput: {
       javascript: "49\n1",
       python: "49\n1",
       java: "49\n1",
+      cpp: "49\n1",
     },
   },
 };
@@ -357,4 +470,17 @@ export const LANGUAGE_CONFIG = {
     icon: "/java.png",
     monacoLang: "java",
   },
+  cpp: {
+    name: "C++",
+    icon: "/cpp.svg",
+    monacoLang: "cpp",
+  },
 };
+
+export const DEFAULT_CPP_STARTER = `#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+  // Write your solution here
+  return 0;
+}`;

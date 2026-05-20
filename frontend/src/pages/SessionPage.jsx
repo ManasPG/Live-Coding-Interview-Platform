@@ -19,6 +19,8 @@ import OutputPanel from "../components/OutputPanel";
 import useStreamClient from "../hooks/useStreamClient";
 import { StreamCall, StreamVideo } from "@stream-io/video-react-sdk";
 import VideoCallUI from "../components/VideoCallUI";
+import { DEFAULT_CPP_STARTER } from "../data/problems";
+import confetti from "canvas-confetti";
 
 function SessionPage() {
   const navigate = useNavigate();
@@ -50,8 +52,42 @@ function SessionPage() {
 
   const [selectedLanguage, setSelectedLanguage] = useState("javascript");
   const [code, setCode] = useState(
-    problemData?.starterCode?.[selectedLanguage] || "",
+    problemData?.starterCode?.[selectedLanguage] ||
+      (selectedLanguage === "cpp" ? DEFAULT_CPP_STARTER : ""),
   );
+
+  const triggerConfetti = () => {
+    confetti({
+      particleCount: 80,
+      spread: 250,
+      origin: { x: 0.2, y: 0.6 },
+    });
+
+    confetti({
+      particleCount: 80,
+      spread: 250,
+      origin: { x: 0.8, y: 0.6 },
+    });
+  };
+
+  const normalizeOutput = (value) => {
+    return value
+      .trim()
+      .split("\n")
+      .map((line) =>
+        line
+          .trim()
+          .replace(/\[\s+/g, "[")
+          .replace(/\s+\]/g, "]")
+          .replace(/\s*,\s*/g, ","),
+      )
+      .filter((line) => line.length > 0)
+      .join("\n");
+  };
+
+  const checkIfTestsPassed = (actualOutput, expectedOutput) => {
+    return normalizeOutput(actualOutput) === normalizeOutput(expectedOutput);
+  };
 
   // auto-join session if user is not already a participant and not the host
   useEffect(() => {
@@ -72,16 +108,19 @@ function SessionPage() {
 
   // update code when problem loads or changes
   useEffect(() => {
-    if (problemData?.starterCode?.[selectedLanguage]) {
-      setCode(problemData.starterCode[selectedLanguage]);
-    }
+    setCode(
+      problemData?.starterCode?.[selectedLanguage] ||
+        (selectedLanguage === "cpp" ? DEFAULT_CPP_STARTER : ""),
+    );
   }, [problemData, selectedLanguage]);
 
   const handleLanguageChange = (e) => {
     const newLang = e.target.value;
     setSelectedLanguage(newLang);
     // use problem-specific starter code
-    const starterCode = problemData?.starterCode?.[newLang] || "";
+    const starterCode =
+      problemData?.starterCode?.[newLang] ||
+      (newLang === "cpp" ? DEFAULT_CPP_STARTER : "");
     setCode(starterCode);
     setOutput(null);
   };
@@ -93,6 +132,25 @@ function SessionPage() {
     const result = await executeCode(selectedLanguage, code);
     setOutput(result);
     setIsRunning(false);
+
+    if (result.success) {
+      const expectedOutput = problemData?.expectedOutput?.[selectedLanguage];
+
+      if (expectedOutput) {
+        const testsPassed = checkIfTestsPassed(result.output, expectedOutput);
+
+        if (testsPassed) {
+          triggerConfetti();
+          toast.success("All tests passed! Great job!");
+        } else {
+          toast.error("Tests failed. Check your output!");
+        }
+      } else {
+        toast.success("Code executed successfully!");
+      }
+    } else {
+      toast.error("Code execution failed!");
+    }
   };
 
   const handleEndSession = () => {

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="C++">
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#00599C"/>
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#fade)" opacity="0.18"/>
+
+  <defs>
+    <linearGradient id="fade" x1="10" y1="8" x2="54" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7FD1FF"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <path d="M17 20.5L32 12l15 8.5V37.5L32 46 17 37.5V20.5Z" fill="#0A6CC2" opacity="0.28"/>
+  <path d="M17 20.5L32 12l15 8.5V37.5L32 46 17 37.5V20.5Z" stroke="#BCE6FF" stroke-opacity="0.22"/>
+
+  <text x="32" y="38" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF">C++</text>
+</svg>
