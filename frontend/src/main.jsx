@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { useEffect } from "react";
 import { useAuth, ClerkProvider } from "@clerk/clerk-react";
+import { dark } from "@clerk/ui/themes";
 import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router";
@@ -31,7 +32,10 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+        <ClerkProvider
+          publishableKey={PUBLISHABLE_KEY}
+          appearance={{ theme: dark }}
+        >
           <ClerkAxiosBridge />
           <App />
         </ClerkProvider>
